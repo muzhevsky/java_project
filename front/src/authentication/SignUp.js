@@ -1,5 +1,5 @@
 import UserSignUp from "./UserSignUp";
-import ChangeRoleButton from "./ChangeRoleButton";
+import Button from "../common/inputs/Button";
 import CompanySignUp from "./CompanySignUp";
 import React, {useLayoutEffect, useState} from "react";
 
@@ -12,11 +12,11 @@ export default function SignUp() {
             {
                 role === 0 ?
                     <div><UserSignUp/>
-                        <ChangeRoleButton text={"Зарегистрироваться как исполнитель"}
-                             onClickFunction={() => {setRole(1)}}/></div> :
+                        <Button text={"Зарегистрироваться как исполнитель"}
+                                onClickFunction={() => {setRole(1)}}/></div> :
                     <div><CompanySignUp/>>
-                        <ChangeRoleButton text={"Зарегистрироваться как заказчик"}
-                             onClickFunction={() => setRole(0)}/></div>
+                        <Button text={"Зарегистрироваться как заказчик"}
+                                onClickFunction={() => setRole(0)}/></div>
             }
         </div>
     )

@@ -9,6 +9,6 @@ export default function InputWarning({message, itemsList}){
     }
 
     return(
-        <ul>{message}{getWarning()}</ul>
+        <>{message}{getWarning()}</>
     )
 }

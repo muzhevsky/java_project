@@ -7,6 +7,7 @@ import InputWarning from "../common/inputs/InputWarning";
 import {useCookies} from "react-cookie";
 import FileInput from "../common/inputs/FileInput";
 import {checkEmpty, checkPasswordsEquality, validateEmail, validateFile, validatePhone, validatePassword} from "../functions/Validation";
+import {PostHttpRequestOptions} from "../functions/HttpRequestOptions";
 
 
 export default function CompanySignUp() {
@@ -41,7 +42,7 @@ export default function CompanySignUp() {
             type: innFile.type
         }
 
-        var body = JSON.stringify({
+        let body = JSON.stringify({
             accountCreationForm: {
                 email:email,
                 password:password,
@@ -55,17 +56,7 @@ export default function CompanySignUp() {
             innFileJson: JSON
         });
 
-        var headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        var requestOptions = {
-            method: 'POST',
-            headers: headers,
-            redirect: 'follow',
-            body: body
-        };
-
-        fetch("/signup/company", requestOptions)
+        fetch("/signup/company", PostHttpRequestOptions("json", body))
             .then(response => response.json())
             .then(response => {
                 setAccessToken("accessToken", response.accessToken);
@@ -81,7 +72,7 @@ export default function CompanySignUp() {
     useEffect(()=>{checkEmpty(companyName, setCompanyNameValid)}, [companyName]);
     useEffect(()=>{checkEmpty(ownerName, setOwnerNameValid)}, [ownerName]);
     useEffect(()=>{checkEmpty(ownerSurname, setOwnerSurnameValid)}, [ownerSurname]);
-    useEffect(()=>{validateFile(innFile, setInnFileValid)}, [innFile]);
+    useEffect(()=>{validateFile(innFile, setInnFileValid, "application/pdf")}, [innFile]);
 
     return (
         <form name="signup">

@@ -1,32 +1,63 @@
 import Cookies from "js-cookie";
+import {Navigate} from "react-router-dom";
+import {GetHTTPRequestOptions, PostHttpRequestOptions} from "./HttpRequestOptions";
 
-export const refreshToken = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "text/plain");
+export async function authorize(setRole, onRoleSetFunc) {
+    fetch("/authorize", GetHTTPRequestOptions(
+        {accessToken: Cookies.get("accessToken")}))
+        .then(response => {
+                if (response.status === 200) {
+                    response.text().then((res) => {
+                        setRole(res);
+                        if (onRoleSetFunc !== undefined) onRoleSetFunc();
+                    })
+                }
+                else if (response.status === 401){
+                    console.log("start refresh");
+                    refreshToken(()=>
+                            {
+                                console.log("end refresh");
+                                console.log(Cookies.get("accessToken"));
+                                fetch("/authorize", GetHTTPRequestOptions(
+                                    {accessToken: Cookies.get("accessToken")}))
+                                    .then(response => {
+                                        if (response.status === 200) {
+                                            response.text().then((res) => {
+                                                setRole(res);
+                                                if (onRoleSetFunc !== undefined) onRoleSetFunc();
+                                            })
+                                     } else setRole("guest");
+                            })
+                        }
+                    )
+                }
+            }
+        )
+}
 
-    var raw = Cookies.get("accessToken");
-
-    console.log(raw);
-
-    var requestOptions = {
+function refreshToken(continueFunc) {
+    return fetch('/refresh', {
         method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'plain/text',
+        },
+        body: Cookies.get("refreshToken")
+    })
+        .then((response)=>{
+            if (response.status === 200) {
+                response.json().then(
+                    (response)=>{
+                        if (response.accessToken !== undefined){
+                            console.log("refresh");
+                            Cookies.set("accessToken", response.accessToken);
+                            Cookies.set("refreshToken", response.refreshToken);
+                            console.log(Cookies.get("accessToken"));
+                            continueFunc();
+                        }
+                    }
+                )
 
-    // todo подумать над рефрешем
-    // fetch("http://localhost:8080/refresh", requestOptions)
-    //     .then(response => response.json())
-    //     .then(response => {
-    //         if (response.status > 200) {
-    //             console.log(response.status);
-    //         }
-    //         if (response.status === 401){
-    //             refreshToken();
-    //         }
-    //
-    //         setRole(response.role);
-    //     })
-    //     .catch(error => console.log('error', error))}, [])
+            }
+        })
 }

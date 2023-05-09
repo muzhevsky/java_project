@@ -5,6 +5,7 @@ import ForgotPasswordButton from "./ForgotPasswordButton";
 import Error from "../error/Error"
 import Cookies from 'js-cookie'
 import {Navigate} from "react-router-dom";
+import {PostHttpRequestOptions} from "../functions/HttpRequestOptions";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
@@ -21,17 +22,7 @@ export default function SignIn() {
             password:password
         });
 
-        var headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        var requestOptions = {
-            method: 'POST',
-            headers: headers,
-            redirect: 'follow',
-            body: body
-        };
-
-        fetch("/signin", requestOptions)
+        fetch("/signin", PostHttpRequestOptions(body))
             .then((response) => {
                 setSignInError(false);
                 setServiceError(false);

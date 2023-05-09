@@ -7,10 +7,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-@SpringBootApplication
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+@SpringBootApplication(scanBasePackages = "org.muzhevsky")
 public class Main {
-    public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
-        var ctx = new AnnotationConfigApplicationContext("org.muzhevsky");
+    public static void main(String[] args) throws IOException {
+       var ctx = SpringApplication.run(Main.class, args);
     }
 }

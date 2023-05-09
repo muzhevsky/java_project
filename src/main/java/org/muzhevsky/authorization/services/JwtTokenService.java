@@ -1,11 +1,11 @@
 package org.muzhevsky.authorization.services;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import lombok.SneakyThrows;
+import org.muzhevsky.authorization.config.AuthorizationConfig;
 import org.muzhevsky.authorization.dtos.TokenData;
-import org.muzhevsky.config.AuthConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.Date;
 public class JwtTokenService implements TokenService {
     @Autowired
     @Qualifier("authConfig")
-    AuthConfig authConfig;
+    AuthorizationConfig authorizationConfig;
     @Autowired
     @Qualifier("decoder")
     Base64.Decoder decoder;
@@ -29,7 +29,7 @@ public class JwtTokenService implements TokenService {
 
     @PostConstruct
     public void init() {
-        hmacKey = new SecretKeySpec(decoder.decode(authConfig.getModel().getKey()),
+        hmacKey = new SecretKeySpec(decoder.decode(authorizationConfig.getModel().getKey()),
                 SignatureAlgorithm.HS256.getJcaName());
     }
 
@@ -56,8 +56,10 @@ public class JwtTokenService implements TokenService {
         return accessToken;
     }
 
-    public TokenData decodeToken(String jwt) throws ExpiredJwtException {
+
+    @SneakyThrows
+    public TokenData decodeToken(String jwt) {
         var claims = Jwts.parserBuilder().setSigningKey(hmacKey).build().parseClaimsJws(jwt).getBody();
-        return new TokenData(claims.get("id", Integer.class), claims.getExpiration());
+        return new TokenData(claims.get("id", Integer.class),false);
     }
 }

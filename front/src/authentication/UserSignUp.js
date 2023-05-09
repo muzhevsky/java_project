@@ -3,8 +3,9 @@ import PasswordInput from "../common/inputs/PasswordInput";
 import React, {useEffect, useState} from "react";
 import CheckboxInput from "../common/inputs/CheckboxInput";
 import InputWarning from "../common/inputs/InputWarning";
-import {useCookies} from "react-cookie";
+import Cookies from 'js-cookie'
 import {checkPasswordsEquality, validateEmail, validatePassword} from "../functions/Validation";
+import {PostHttpRequestOptions} from "../functions/HttpRequestOptions";
 
 
 export default function UserSignUp() {
@@ -16,9 +17,6 @@ export default function UserSignUp() {
     const [emailIsValid, setEmailValid] = useState(false);
     const [passwordIsValid, setPasswordValid] = useState(false);
     const [passwordsAreEqual, setPasswordsEqual] = useState(false);
-
-    const [accessToken, setAccessToken] = useCookies(['myCookie']);
-    const [refreshToken, setRefreshToken] = useCookies(['myCookie']);
 
 
     const sendSignupData = (e) => {
@@ -33,21 +31,11 @@ export default function UserSignUp() {
             }
         });
 
-        var headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        var requestOptions = {
-            method: 'POST',
-            headers: headers,
-            body: body,
-            redirect: 'follow'
-        };
-
-        fetch("/signup/user", requestOptions)
+        fetch("/signup/user", PostHttpRequestOptions( "json", body))
             .then(response => response.json())
             .then(response => {
-                setAccessToken("accessToken", response.accessToken);
-                setRefreshToken("refreshToken", response.refreshToken);
+                Cookies.set("accessToken", response.accessToken);
+                Cookies.set("refreshToken", response.refreshToken);
             })
             .catch(error => console.log('error', error));
     }
