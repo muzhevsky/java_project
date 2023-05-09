@@ -10,9 +10,9 @@ export const validatePhone = (phoneNumber, setPhoneNumberValid) => {
     setPhoneNumberValid(false)
     if (phoneNumber.match("^[+][0-9]{11,15}$")) setPhoneNumberValid(true);
 }
-export const validateFile = (innFile, setInnFileValid) => {
+export const validateFile = (innFile, setInnFileValid, type) => {
     setInnFileValid(false)
-    if (!innFile || innFile.type=="application/pdf") setInnFileValid(true);
+    if (!innFile || innFile.type==type) setInnFileValid(true);
 }
 export const checkEmpty = (state, setFunction) => {
     setFunction(false);

@@ -1,13 +1,16 @@
 package org.muzhevsky.authorization.services;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import org.muzhevsky.authorization.config.AuthorizationConfig;
+import org.muzhevsky.authorization.dtos.TokenData;
 import org.muzhevsky.authorization.exceptions.TokenNotFoundException;
-import org.muzhevsky.signup.exceptions.UserNotFoundException;
-import org.muzhevsky.signup.repos.AccountRepository;
-import org.muzhevsky.signup.repos.AccountRoleRepository;
+import org.muzhevsky.authorization.repos.AccountRepository;
+import org.muzhevsky.authorization.repos.AccountRoleRepository;
 import org.muzhevsky.authorization.enums.Role;
+import org.muzhevsky.authorization.exceptions.UserNotFoundException;
+import org.muzhevsky.authorization.models.AccountModel;
 import org.muzhevsky.authorization.models.TokenPair;
 import org.muzhevsky.authorization.repos.TokenRepository;
-import org.muzhevsky.config.AuthConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,15 +23,17 @@ public class AuthorizationService {
 
     @Autowired
     @Qualifier("authConfig")
-    AuthConfig config;
+    AuthorizationConfig config;
 
     @Autowired
     TokenRepository tokenRepository;
 
     @Autowired
+    @Qualifier("AuthorizationAccountRepository")
     AccountRepository accountRepository;
 
     @Autowired
+    @Qualifier("AuthorizationAccountRoleRepository")
     AccountRoleRepository accountRoleRepository;
 
     public TokenPair getTokenPair(int userId){
@@ -42,17 +47,39 @@ public class AuthorizationService {
         return tokenModel;
     }
 
-    public Role checkToken(String accessToken) throws TokenNotFoundException, UserNotFoundException {
+    public TokenData getTokenData(String accessToken) throws TokenNotFoundException{
         var tokenPairModel = tokenRepository.findById(accessToken);
         if (tokenPairModel.isEmpty()){
             throw new TokenNotFoundException();
         }
-        var tokenData = jwtTokenService.decodeToken(tokenPairModel.get().getAccessToken());
-        var accountModel = accountRepository.findById(tokenData.getUserId());
+
+        TokenData tokenData;
+        try{
+            tokenData = jwtTokenService.decodeToken(tokenPairModel.get().getAccessToken());
+        }
+        catch (ExpiredJwtException ex){
+            tokenData = new TokenData(ex.getClaims().get("id", Integer.class), true);
+        }
+
+        return tokenData;
+    }
+
+
+    private AccountModel getAccount(String accessToken)throws TokenNotFoundException, UserNotFoundException{
+        var userId = getTokenData(accessToken).getAccountId();
+        var accountModel = accountRepository.findById(userId);
+
         if (accountModel.isEmpty()){
             throw new UserNotFoundException("user with this id wasn't found");
         }
-        var roleData = accountRoleRepository.findById(accountModel.get().getRoleId());
+
+        return accountModel.get();
+    }
+
+
+    public Role getUserRole(String accessToken) throws TokenNotFoundException, UserNotFoundException{
+        var accountModel = getAccount(accessToken);
+        var roleData = accountRoleRepository.findById(accountModel.getRoleId());
         return Role.valueOf(roleData.get().getName());
     }
 }

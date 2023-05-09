@@ -1,17 +1,15 @@
 package org.muzhevsky.home.controllers;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.muzhevsky.authorization.exceptions.ExpiredTokenException;
 import org.muzhevsky.authorization.exceptions.TokenNotFoundException;
 import org.muzhevsky.authorization.services.AuthorizationService;
-import org.muzhevsky.signup.exceptions.UserNotFoundException;
+import org.muzhevsky.authorization.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class HomeController {
@@ -22,9 +20,17 @@ public class HomeController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/home")
-    public ResponseEntity<String> home(@RequestBody String accessToken){
+    public ResponseEntity<String> home(@RequestHeader("accessToken") String accessToken){
         try {
-            return new ResponseEntity<>(authorizationService.checkToken(accessToken).name(), HttpStatus.OK);
+            var tokens = authorizationService.getTokenData(accessToken);
+            if (tokens.isExpired()) throw new ExpiredTokenException();
+
+            var role =  authorizationService.getUserRole(accessToken).name();
+            return new ResponseEntity<>(role, HttpStatus.OK);
+        }
+        catch (ExpiredTokenException ex){
+            System.out.println("expired");
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
         }
         catch (TokenNotFoundException | UserNotFoundException e) {
             System.out.println(e.getMessage());
