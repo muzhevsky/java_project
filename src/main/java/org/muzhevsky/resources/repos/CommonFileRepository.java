@@ -14,7 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service("commonFileRepository")
-public class CommonFileRepository {
+public class CommonFileRepository implements FileRepository{
     private final String path = "resources\\files\\";
     private final Random random = new Random();
     @SneakyThrows
@@ -32,37 +32,12 @@ public class CommonFileRepository {
     }
 
     @SneakyThrows
-    public String zip(List<String> fileNames){
-
-        var seconds = Long.toString(Instant.now().getEpochSecond() + random.nextLong());
-        var fullName = seconds + ".zip";
-
-        FileOutputStream fos = new FileOutputStream(path + fullName);
-        ZipOutputStream zipOut = new ZipOutputStream(fos);
-        for (var name : fileNames){
-            File fileToZip = new File(path+name);
-            FileInputStream fis = new FileInputStream(fileToZip);
-            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-            zipOut.putNextEntry(zipEntry);
-
-            byte[] bytes = new byte[1024];
-            int length;
-            while((length = fis.read(bytes)) >= 0) {
-                zipOut.write(bytes, 0, length);
-            }
-            fis.close();
-        }
-        zipOut.close();
-        fos.close();
-
-        return fullName;
-    }
-
-    @SneakyThrows
     public MyFile getFileByName(String fileName){
         var inputStream = new FileInputStream(path+fileName);
         var split = fileName.split("[.]");
         var format = split[split.length - 1];
-        return new MyFile(format, inputStream.readAllBytes());
+        var file = new MyFile(format, inputStream.readAllBytes());
+        inputStream.close();
+        return file;
     }
 }

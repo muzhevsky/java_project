@@ -38,7 +38,7 @@ export default function UserSignUp() {
             .then(response => {
                 Cookies.set("accessToken", response.accessToken);
                 Cookies.set("refreshToken", response.refreshToken);
-
+                setAuthorized(true);
             })
             .catch(error => console.log('error', error));
     }

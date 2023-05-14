@@ -3,25 +3,37 @@ import {GetHTTPRequestOptions, PostHttpRequestOptions} from "../../functions/Htt
 import React, {useEffect, useState} from "react";
 import ProjectCard from "./ProjectCard";
 import {Navigate, redirect} from "react-router-dom";
+import {authorize} from "../../functions/RefreshFunction";
 
-export default function ProjectList({selectedFolder}){
+export default function ProjectList({selectedFolder, update}){
 
     const [projects, setProjects] = useState([]);
     const [openProjectId, setOpenProjectId] = useState(-1);
+    const [forceUpdate, setForceUpdate] = useState(update);
+    const [role, setRole] = useState(-1);
+
+    useEffect(()=>{
+        fetchProjects();
+    }, [update])
 
     useEffect(()=>{
         fetchProjects();
     },[selectedFolder])
 
+    useEffect(()=>{
+        fetchProjects();
+    },[]);
+
     const fetchProjects = () => {
         let token = Cookies.get("accessToken");
 
-        fetch("/projects/folder/" + selectedFolder, GetHTTPRequestOptions({accessToken: token}))
-            .then(response => response.json())
-            .then(response => {
-                setProjects(response);
-                console.log(response);
-            });
+        authorize(setRole, ()=>{
+            fetch("/projects/folder/" + selectedFolder, GetHTTPRequestOptions({accessToken: token}))
+                .then(response => response.json())
+                .then(response => {
+                    setProjects(response);
+                });
+        });
     }
 
     function renderProjectCards() {

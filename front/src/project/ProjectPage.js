@@ -32,7 +32,6 @@ export default function ProjectPage(){
 
 
     const deleteProject = () => {
-        console.log ("here");
         authorize(setRole, ()=> {
             fetch("/projects/delete", PostHttpRequestOptions(JSON.stringify({
                 accessToken: Cookies.get("accessToken"),
@@ -44,7 +43,7 @@ export default function ProjectPage(){
 
     const render = () => {
         if (role === -1 || projectData === -1) return null;
-        console.log(projectData);
+
         switch(role){
             case "user": return (
                 <>

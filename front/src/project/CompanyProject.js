@@ -3,7 +3,6 @@ import Button from "../common/inputs/Button";
 
 export default function CompanyProject(){
     const takeToEvaluation = () => {
-        console.log("ok");
     }
     return (
         <>

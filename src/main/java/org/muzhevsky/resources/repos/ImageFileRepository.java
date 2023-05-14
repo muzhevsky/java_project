@@ -4,12 +4,13 @@ import lombok.SneakyThrows;
 import org.muzhevsky.resources.dtos.MyFile;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.time.Instant;
 
 @Repository("imageFileRepository")
-public class ImageFileRepository {
+public class ImageFileRepository implements FileRepository {
 
     private final String path = "resources\\pics\\";
 
@@ -31,6 +32,8 @@ public class ImageFileRepository {
         var inputStream = new FileInputStream(path+fileName);
         var split = fileName.split("[.]");
         var format = split[split.length - 1];
-        return new MyFile(format, inputStream.readAllBytes());
+        var file = new MyFile(format, inputStream.readAllBytes());
+        inputStream.close();
+        return file;
     }
 }

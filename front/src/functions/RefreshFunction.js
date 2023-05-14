@@ -13,11 +13,8 @@ export async function authorize(setRole, onRoleSetFunc) {
                     })
                 }
                 else if (response.status === 401){
-                    console.log("start refresh");
                     refreshToken(()=>
                             {
-                                console.log("end refresh");
-                                console.log(Cookies.get("accessToken"));
                                 fetch("/authorize", GetHTTPRequestOptions(
                                     {accessToken: Cookies.get("accessToken")}))
                                     .then(response => {
@@ -49,10 +46,8 @@ function refreshToken(continueFunc) {
                 response.json().then(
                     (response)=>{
                         if (response.accessToken !== undefined){
-                            console.log("refresh");
                             Cookies.set("accessToken", response.accessToken);
                             Cookies.set("refreshToken", response.refreshToken);
-                            console.log(Cookies.get("accessToken"));
                             continueFunc();
                         }
                     }

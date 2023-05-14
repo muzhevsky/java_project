@@ -7,7 +7,6 @@ import FolderList from "./FolderList";
 import Button from "../inputs/Button";
 import ProjectList from "../../project/User/ProjectList";
 import CreateProjectModalWindow from "../../project/User/CreateProjectModalWindow";
-import {Navigate} from "react-router-dom";
 
 export default function UserProjectsSection() {
     const [role, setRole] = useState("user");
@@ -94,7 +93,7 @@ export default function UserProjectsSection() {
                 folderId: project.folderId
             });
 
-            console.log(project.image);
+
             fetch("/projects/create", PostHttpRequestOptions(body))
                 .then(response => response.json())
                 .then(() => {
@@ -109,23 +108,26 @@ export default function UserProjectsSection() {
         readFileInputs(project, sendNewProject);
     }
 
-    return (
-        <>
+    function render(){
+        return (        <>
             {role==="user" ? <>
-                <FolderList forceUpdate={forceUpdate} activeFolder={activeFolder} setActiveFolder={setActiveFolder} setNewFolderWindowActive={setNewFolderWindowActive} ignoreSystem={false}/>
+                <FolderList forceUpdate={forceUpdate} activeFolder={activeFolder} setActiveFolder={setActiveFolder}
+                            setNewFolderWindowActive={setNewFolderWindowActive} ignoreSystem={false}/>
                 <Button text="create folder" onClickFunction={() =>{setNewFolderWindowActive(true)}}>
                     create folder
                 </Button>
                 <Button text="create project" onClickFunction={() =>{setNewProjectWindowActive(true)}}>
                     create project
                 </Button>
-                <ProjectList selectedFolder={activeFolder}/>
+                <ProjectList selectedFolder={activeFolder} update={forceUpdate}/>
             </> : ""}
             {newFolderWindowActive ? <ModalWithInput text="folder name" inputClassName="folder-name-input"
                                                      onAcceptButtonClick={(name) => {createNewFolder(name); setNewFolderWindowActive(false);}}
                                                      onRefuseButtonClick={() => {setNewFolderWindowActive(false)}}/> : ""}
             {newProjectWindowActive ? <CreateProjectModalWindow onAcceptButtonClick={(project) => createNewProject(project)}
                                                                 onRefuseButtonClick={()=> setNewProjectWindowActive(false)}/> : ""}
-        </>
-    )
+        </>);
+    }
+
+    return render();
 }

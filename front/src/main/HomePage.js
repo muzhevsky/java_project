@@ -10,7 +10,6 @@ export default function HomePage(){
 
     useEffect( () => {
         authorize(setRole);
-        console.log("called");
     }, []);
 
     const render = () => {

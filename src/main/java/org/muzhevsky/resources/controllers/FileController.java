@@ -15,10 +15,10 @@ public class FileController{
     @Qualifier("commonFileRepository")
     CommonFileRepository commonFileRepository;
     @GetMapping("files/{filename}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String filename){
+    public ResponseEntity<byte[]> getFile(@PathVariable String filename){
         try{
-            var image = commonFileRepository.getFileByName(filename);
-            return new ResponseEntity<>(image.getContent(), HttpStatus.OK);
+            var file = commonFileRepository.getFileByName(filename);
+            return new ResponseEntity<>(file.getContent(), HttpStatus.OK);
         }
         catch (Exception ex){
             System.out.println(ex.getMessage());

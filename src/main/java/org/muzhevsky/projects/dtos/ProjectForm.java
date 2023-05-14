@@ -1,7 +1,7 @@
 package org.muzhevsky.projects.dtos;
 
 import lombok.Getter;
-import org.muzhevsky.resource.dtos.MyFile;
+import org.muzhevsky.resources.dtos.MyFile;
 
 @Getter
 public class ProjectForm {

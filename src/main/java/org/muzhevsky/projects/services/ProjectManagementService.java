@@ -5,11 +5,12 @@ import lombok.SneakyThrows;
 import org.muzhevsky.projects.dtos.ProjectForm;
 import org.muzhevsky.projects.models.ProjectModel;
 import org.muzhevsky.projects.repos.ProjectRepository;
-import org.muzhevsky.resource.repos.ImageFileRepository;
-import org.muzhevsky.resource.repos.CommonFileRepository;
+import org.muzhevsky.resources.repos.FileRepository;
+import org.muzhevsky.utils.Zipper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.muzhevsky.resources.dtos.MyFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,17 +19,20 @@ import java.util.List;
 public class ProjectManagementService {
     @Autowired
     @Qualifier("imageFileRepository")
-    ImageFileRepository imageRepository;
+    FileRepository imageRepository;
 
     @Autowired
     @Qualifier("commonFileRepository")
-    CommonFileRepository commonFileRepository;
+    FileRepository commonFileRepository;
 
     @Autowired
     ProjectRepository projectRepository;
 
     @Autowired
     Gson gson;
+
+    @Autowired
+    Zipper zipper;
 
     public List<ProjectModel> getProjects(int folderId, int userId){
         if(folderId == -1){
@@ -58,7 +62,7 @@ public class ProjectManagementService {
             var projectModel = new ProjectModel();
             var fileNames = Arrays.stream(form.getFiles()).map(file->commonFileRepository.save(file));
 
-            var zipName = commonFileRepository.zip(fileNames.toList());
+            var zipName = zipper.zip(fileNames.toList());
 
             projectModel.init(form, userId, imageFileName, zipName);
 

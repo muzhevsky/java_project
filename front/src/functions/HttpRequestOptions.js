@@ -15,7 +15,6 @@ export function GetHTTPRequestOptions(headers){
     let formattedHeaders = new Headers();
 
     Object.entries(headers).forEach((entry)=>{
-        console.log(entry);
         formattedHeaders.append(entry[0], entry[1]);
     });
 

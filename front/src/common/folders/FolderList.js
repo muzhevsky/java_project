@@ -25,7 +25,7 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
     const [role, setRole] = useState(-1);
     const [activeFolderObject, setActiveObject] = useState(undefined);
     const [folderObjects, setFolderObjects] = useState(defaultFolders);
-    const [update, setUpdate] = useState(-1);
+    const [update, setUpdate] = useState(forceUpdate);
 
     const fetchFolders = () => {
         authorize(setRole, () => {
@@ -37,16 +37,12 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
                         item.selected = false
                     });
                     setFolderObjects(defaultFolders.concat(response));
-                    console.log(update);
-                    setUpdate(forceUpdate);
-                    console.log(update);
                 });
         });
     }
 
     useEffect(()=>{
         fetchFolders();
-        console.log("fetchCall");
     }, [forceUpdate])
 
     useEffect(()=>{
@@ -61,8 +57,8 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
             }
             folderHtmlObjects = folderHtmlObjects.filter(item => item !== undefined);
             for (let i = 0; i < folderHtmlObjects; i++) if (folderHtmlObjects[i].id >= 0) folderHtmlObjects[i].deletable = true;
-            folderHtmlObjects = folderHtmlObjects.map((item) => <FolderItem name={item.name} id={item.id}
-                                                                            setActive={(item)=>{
+            folderHtmlObjects = folderHtmlObjects.map((item) => <FolderItem name={item.name} id={item.id} key = {item.id}
+                                                                            setActive={(item) =>{
                                                                                 setActiveFolder(item);
                                                                                 setActiveObject(undefined);
                                                                             }}></FolderItem>)

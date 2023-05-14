@@ -1,3 +1,7 @@
+body {
+    margin: 0.5em;
+}
+
 p{
     margin: 0px;
     padding: 0px;
@@ -40,4 +44,12 @@ ul{
 .project-image{
     width: 100%;
     max-height: 700px;
+}
+
+.userHome button {
+    margin: 0 5px;
+}
+
+.card {
+    margin: 10px 0;
 }

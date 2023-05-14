@@ -1,8 +1,7 @@
-package org.muzhevsky.resource.repos;
+package org.muzhevsky.utils;
 
 import lombok.SneakyThrows;
-import org.muzhevsky.resource.dtos.MyFile;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,27 +12,13 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Service("commonFileRepository")
-public class CommonFileRepository {
+@Component
+public class Zipper {
     private final String path = "resources\\files\\";
     private final Random random = new Random();
-    @SneakyThrows
-    public String save(MyFile file){
-        var instant = Instant.now();
-        var name = Long.toString(instant.getEpochSecond() + instant.getNano() + random.nextLong());
-        var fullName = name + "." + file.getFormat();
-
-        var outputStream = new FileOutputStream(path+fullName);
-        outputStream.write(file.getContent());
-
-        outputStream.close();
-        System.out.println(fullName);
-        return fullName;
-    }
 
     @SneakyThrows
     public String zip(List<String> fileNames){
-
         var seconds = Long.toString(Instant.now().getEpochSecond() + random.nextLong());
         var fullName = seconds + ".zip";
 
@@ -56,13 +41,5 @@ public class CommonFileRepository {
         fos.close();
 
         return fullName;
-    }
-
-    @SneakyThrows
-    public MyFile getFileByName(String fileName){
-        var inputStream = new FileInputStream(path+fileName);
-        var split = fileName.split("[.]");
-        var format = split[split.length - 1];
-        return new MyFile(format, inputStream.readAllBytes());
     }
 }
