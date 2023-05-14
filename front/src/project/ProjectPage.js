@@ -47,7 +47,7 @@ export default function ProjectPage(){
         switch(role){
             case "user": return (
                 <>
-                    {deleteWindowIsOpen ? <ModalWithInput text="type project name if u're sure"
+                    {deleteWindowIsOpen ? <ModalWithInput name="Снять проект с публикации?" inputName="Введите название проекта если уверены"
                                                           onRefuseButtonClick={()=>{setDeleteWindowOpen(false)}}
                                                           onAcceptButtonClick={(input)=>{if (input === projectData.name) deleteProject()}} inputClassName="project name"/> : ""}
                     {projectData === -1 ? "" : <UserProject projectData={projectData} setDeleteWindowOpen={setDeleteWindowOpen}/>}

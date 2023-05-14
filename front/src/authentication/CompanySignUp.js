@@ -95,7 +95,7 @@ export default function CompanySignUp() {
             <LettersInput fieldName="name" onChangeFunction={(e)=>setOwnerSurname(e.target.value)}/>
             {ownerNameIsValid ? "" : <InputWarning message = "fill this field"/>}
             <LettersInput fieldName="patronymic" onChangeFunction={(e)=>setOwnerPatronymic(e.target.value)}/>
-            <FileInput fieldName="innFile" onChangeFunction={(e)=>setInnFile(e.target.files[0])}/>
+            <FileInput fieldName="innFile" constraints=".pdf" onChangeFunction={(e)=>setInnFile(e.target.files[0])}/>
             {innFileIsValid ? "" : <InputWarning message="pdf file should have .pdf extension"/> }
             <CheckboxInput fieldName="isSubscriber" onChangeFunction={(e) => setIsSubscriber(e.target.checked ? 'y' : 'n')} className="checkboxInput"/>
 

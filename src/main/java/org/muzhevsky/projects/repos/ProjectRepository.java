@@ -22,12 +22,4 @@ public interface ProjectRepository extends CrudRepository<ProjectModel, Integer>
     @Modifying
     @Query("update projects set revoked='y' where id=:id")
     void markProjectRevoked(@Param("id") Integer id);
-
-    @Modifying
-    @Query("insert into projects(account_id, file_name, image_file_name, name, description, short_description, revoked, folder_id)" +
-            "values (:accountId, :fileName, :image, :name, :description, :shortDescription, 'n', :folderId)")
-    void createProject (@Param("accountId") Integer accountId, @Param("name") String name,
-                        @Param("description") String description, @Param("shortDescription") String shortDescription,
-                        @Param("image") String image, @Param("fileName") String fileName,
-                        @Param("folderId") Integer folderId);
 }

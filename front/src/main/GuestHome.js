@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
+import SignIn from "../authentication/SignIn";
+import {Navigate} from "react-router-dom";
 
 export default function GuestHome(){
     return(
-        <div>unauthorized</div>
+        <Navigate to="/signin"></Navigate>
     )
 }

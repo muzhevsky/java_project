@@ -33,6 +33,6 @@ public class DefaultCreateAccountService implements CreateAccountService {
         accountModel.setPassword(password);
         accountModel.setSalt(salt);
 
-        return accountRepository.save(accountModel);
+        return accountModel;
     }
 }

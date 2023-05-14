@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.ToString;
 import org.muzhevsky.projects.dtos.ProjectForm;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
@@ -25,14 +28,13 @@ public class ProjectModel {
     private String fileName;
 
 
-    public void init(ProjectForm form, int accountId, String imageFileName, String fileName){
+    public void init(ProjectForm form, int accountId){
         this.name = form.getName();
         this.accountId = accountId;
-        this.imageFileName = imageFileName;
         this.description = form.getDescription();
         this.shortDescription = form.getShortDescription();
-        this.fileName = fileName;
         this.revoked = "n";
         this.folderId = form.getFolderId();
     }
+
 }

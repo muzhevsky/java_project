@@ -5,12 +5,12 @@ import lombok.SneakyThrows;
 import org.muzhevsky.projects.dtos.ProjectForm;
 import org.muzhevsky.projects.models.ProjectModel;
 import org.muzhevsky.projects.repos.ProjectRepository;
-import org.muzhevsky.resources.repos.FileRepository;
+import org.muzhevsky.resources.repos.ProjectFilesRepository;
+import org.muzhevsky.resources.repos.ImageFileRepository;
 import org.muzhevsky.utils.Zipper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.muzhevsky.resources.dtos.MyFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.List;
 public class ProjectManagementService {
     @Autowired
     @Qualifier("imageFileRepository")
-    FileRepository imageRepository;
+    ImageFileRepository imageRepository;
 
     @Autowired
-    @Qualifier("commonFileRepository")
-    FileRepository commonFileRepository;
+    @Qualifier("projectFilesRepository")
+    ProjectFilesRepository projectFilesRepository;
 
     @Autowired
     ProjectRepository projectRepository;
@@ -52,23 +52,20 @@ public class ProjectManagementService {
     public void createProject(ProjectForm form, int userId){
         try {
             var image = form.getImage();
-            String imageFileName;
-
-            if (image.getContent().length > 1)
-                imageFileName = imageRepository.save(image);
-            else
-                imageFileName = "default.jpg";
-
+            var imageFileName = imageRepository.save(image);
             var projectModel = new ProjectModel();
-            var fileNames = Arrays.stream(form.getFiles()).map(file->commonFileRepository.save(file));
 
-            var zipName = zipper.zip(fileNames.toList());
+            projectModel.init(form, userId);
 
-            projectModel.init(form, userId, imageFileName, zipName);
-
-            projectRepository.createProject(projectModel.getAccountId(), projectModel.getName(),
-                    projectModel.getDescription(), projectModel.getShortDescription(), imageFileName,
-                    projectModel.getFileName(), projectModel.getFolderId());
+            var entity = projectRepository.save(projectModel);
+            System.out.println(entity.getId());
+//            var id = projectRepository.createProject(projectModel.getAccountId(), projectModel.getName(),
+//                    projectModel.getDescription(), projectModel.getShortDescription(), projectModel.getFolderId(), imageFileName);
+//            var id = projectRepository.getLastInsert();
+//            var filePaths = Arrays.stream(form.getFiles()).map(file -> projectFilesRepository.save(id, file));
+//            var zipName = zipper.zip(id, filePaths.toList());
+//
+//            projectRepository.updateFileNames(id, zipName);
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());

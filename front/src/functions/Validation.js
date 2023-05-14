@@ -19,6 +19,12 @@ export const checkEmpty = (state, setFunction) => {
     if (state) setFunction(true);
 }
 
+export const validateUsername = (userName, setUsernameValid) =>{
+    setUsernameValid(false);
+    console.log(userName.match("[A-Za-zА-Яа-я]{8,50}"));
+    if (userName.match("[A-Za-zА-Яа-я]{8,50}")) setUsernameValid(true);
+}
+
 export const validatePassword = (password, setPasswordValid) => {
     let upperCase = password.match("[A-Z]");
     let lowerCase = password.match("[a-z]");

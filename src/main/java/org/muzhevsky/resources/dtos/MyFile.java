@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MyFile {
-    private String format;
+    private String name;
     private byte[] content;
 
     public MyFile(){

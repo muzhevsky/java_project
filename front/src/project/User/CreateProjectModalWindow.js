@@ -14,7 +14,6 @@ export default function CreateProjectModalWindow({onAcceptButtonClick, onRefuseB
     const [files, setFiles] = useState("");
     const [images, setImages] = useState("");
     const [activeFolder, setActive] = useState(-1);
-    const [update, setUpdate] = useState(0);
 
     const [nameIsValid, setNameValid] = useState(false);
     const [descriptionIsValid, setDescriptionIsValid] = useState(false);
@@ -24,36 +23,47 @@ export default function CreateProjectModalWindow({onAcceptButtonClick, onRefuseB
     useEffect(()=>{checkEmpty(description, setDescriptionIsValid)}, [description]);
     useEffect(()=>{checkEmpty(shortDescription, setShortDescriptionIsValid)}, [shortDescription]);
 
+    const createProject = (e) => {
+        e.preventDefault();
+        console.log('try');
+        if (!nameIsValid || !shortDescriptionIsValid || !descriptionIsValid) return;
+
+        console.log('create');
+
+        onAcceptButtonClick({
+            name: name,
+            shortDescription: shortDescription,
+            description: description,
+            files: files,
+            image: images,
+            folderId: activeFolder
+        });
+    }
+
     return (
         <div className="modal fade show" id="exampleModalCenter" tabIndex="-1" aria-labelledby="exampleModalCenterTitle"
              style={{display: "block"}} aria-modal="true" role="dialog">
-            <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-dialog modal-xl modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
+                        <h1 className="modal-title fs-5" id="exampleModalCenterTitle">Создание проекта</h1>
                     </div>
-                    <TextInput fieldName="name" onChangeFunction={(e)=>{setName(e.target.value)}}></TextInput>
-                    {nameIsValid ? "" : <span>required field</span>}
-                    <TextInput fieldName="shortDescription" onChangeFunction={(e)=>{setShortDescription(e.target.value)}}></TextInput>
-                    {shortDescriptionIsValid ? "" : <span>required field</span>}
-                    <TextareaInput fieldName="description" onChangeFunction={(e)=>{setDescription(e.target.value)}}></TextareaInput>
-                    {descriptionIsValid ? "" : <span>required field</span>}
-                    <FileInput fieldName="files" onChangeFunction={(e)=>{setFiles(e.target.files)}} mult={true}></FileInput>
-                    <FileInput fieldName="images" onChangeFunction={(e)=>{setImages(e.target.files[0]);}} mult={false}></FileInput>
-                    {descriptionIsValid ? "" : <span>required field</span>}
-                    <FolderList activeFolder={activeFolder} setActiveFolder={setActive} update={setUpdate} ignoreSystem={true}></FolderList>
+                    <form>
+                    <TextInput fieldName="Название проекта" onChangeFunction={(e)=>{setName(e.target.value)}}></TextInput>
+                    {nameIsValid ? "" : <span>Обязательно для заполнения</span>}
+                    <TextInput fieldName="Краткое описание" onChangeFunction={(e)=>{setShortDescription(e.target.value)}}></TextInput>
+                    {shortDescriptionIsValid ? "" : <span>Обязательно для заполнения</span>}
+                    <TextareaInput fieldName="Полное описание" onChangeFunction={(e)=>{setDescription(e.target.value)}}></TextareaInput>
+                    {descriptionIsValid ? "" : <span>Обязательно для заполнения</span>}
+                    <FileInput fieldName="Файлы (.pdf, .dwg, .cdw)" constraints=".pdf,.dwg,.cdw"  onChangeFunction={(e)=>{setFiles(e.target.files)}} mult={true}></FileInput>
+                    <FileInput fieldName="Картинка" constraints=".png,.jpg,.jfif,.svg" onChangeFunction={(e)=>{setImages(e.target.files[0]);}} mult={false}></FileInput>
+                        <br></br>
+                    <FolderList activeFolder={activeFolder} setActiveFolder={setActive} ignoreSystem={true}></FolderList>
                     <div className="modal-footer">
-                        <Button text="close" onClickFunction={()=>{onRefuseButtonClick()}}/>
-                        <Button text="create" onClickFunction={()=>{onAcceptButtonClick({
-                            name: name,
-                            shortDescription: shortDescription,
-                            description: description,
-                            files: files,
-                            image: images,
-                            folderId: activeFolder
-                        });}
-                            }/>
+                        <Button text="Закрыть" onClickFunction={()=>{onRefuseButtonClick()}}/>
+                        <Button text="Создать" onClickFunction={(e)=>{createProject(e);}}/>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

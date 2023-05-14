@@ -9,26 +9,16 @@ export default function ProjectList({selectedFolder, update}){
 
     const [projects, setProjects] = useState([]);
     const [openProjectId, setOpenProjectId] = useState(-1);
-    const [forceUpdate, setForceUpdate] = useState(update);
+    const [thisSelectedFolder, setSelectedFolder] = useState(selectedFolder);
     const [role, setRole] = useState(-1);
-
-    useEffect(()=>{
-        fetchProjects();
-    }, [update])
 
     useEffect(()=>{
         fetchProjects();
     },[selectedFolder])
 
-    useEffect(()=>{
-        fetchProjects();
-    },[]);
-
     const fetchProjects = () => {
-        let token = Cookies.get("accessToken");
-
         authorize(setRole, ()=>{
-            fetch("/projects/folder/" + selectedFolder, GetHTTPRequestOptions({accessToken: token}))
+            fetch("/projects/folder/" + selectedFolder, GetHTTPRequestOptions({accessToken: Cookies.get("accessToken")}))
                 .then(response => response.json())
                 .then(response => {
                     setProjects(response);
@@ -37,10 +27,19 @@ export default function ProjectList({selectedFolder, update}){
     }
 
     function renderProjectCards() {
-        let test = projects.map((item)=>
-            <ProjectCard id={item.id} name={item.name} date={item.date}
-                         description={item.shortDescription} imageurl={"images/"+item.imageFileName} onClickFunction={setOpenProjectId}/>)
 
+        let test = projects.map((item)=>
+        {
+            let creationDate = new Date(Date.parse(item.creationDate));
+            let options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+            creationDate = creationDate.toLocaleDateString('ru-RU', options);
+
+            return (<ProjectCard id={item.id} name={item.name}
+                         description={item.shortDescription} imageurl={"images/"+item.imageFileName}
+                         onClickFunction={setOpenProjectId} creationDate={creationDate}/>
+            )
+        });
         return test;
     }
 

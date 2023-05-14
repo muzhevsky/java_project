@@ -2,14 +2,27 @@ import Cookies from "js-cookie";
 import {Navigate} from "react-router-dom";
 import {GetHTTPRequestOptions, PostHttpRequestOptions} from "./HttpRequestOptions";
 
+let funcList = [];
+let setRoleList = [];
+let flag = false;
+
 export async function authorize(setRole, onRoleSetFunc) {
+    setRoleList.push(setRole);
+    funcList.push(onRoleSetFunc);
+    if (flag) return;
+    flag = true;
     fetch("/authorize", GetHTTPRequestOptions(
         {accessToken: Cookies.get("accessToken")}))
         .then(response => {
                 if (response.status === 200) {
                     response.text().then((res) => {
-                        setRole(res);
-                        if (onRoleSetFunc !== undefined) onRoleSetFunc();
+                        console.log(funcList);
+                        console.log(setRoleList);
+                        funcList.forEach((func)=>{if (func !== undefined) func()});
+                        setRoleList.forEach((setRoleFunc)=>{if (setRoleFunc !== undefined) setRoleFunc(res)});
+                        funcList = [];
+                        setRoleList = [];
+                        flag = false;
                     })
                 }
                 else if (response.status === 401){
@@ -20,10 +33,19 @@ export async function authorize(setRole, onRoleSetFunc) {
                                     .then(response => {
                                         if (response.status === 200) {
                                             response.text().then((res) => {
-                                                setRole(res);
-                                                if (onRoleSetFunc !== undefined) onRoleSetFunc();
+                                                console.log(funcList.length);
+                                                console.log(setRoleList.length);
+                                                funcList.forEach((func)=>{if (func !== undefined) func()});
+                                                setRoleList.forEach((setRoleFunc)=>{if (setRoleFunc !== undefined) setRoleFunc(res)});
+                                                funcList = [];
+                                                setRoleList = [];
+                                                flag = false;
                                             })
-                                     } else setRole("guest");
+                                     }
+                                        else{
+                                            setRoleList.forEach((setRoleFunc)=>{if (setRoleFunc !== undefined) setRoleFunc("guest")});
+                                            setRoleList = [];
+                                        }
                             })
                         }
                     )

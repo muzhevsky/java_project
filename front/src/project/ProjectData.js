@@ -1,8 +1,3 @@
-import {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
-import {GetHTTPRequestOptions, PostHttpRequestOptions} from "../functions/HttpRequestOptions";
-import Cookies from "js-cookie";
-
 export default function ProjectData({projectData}){
 
     return (
@@ -15,17 +10,12 @@ export default function ProjectData({projectData}){
 
                 <div className="col-md-6">
                     <h2>{projectData.name}</h2>
-                    <h3>short description</h3>
+                    <h4>short description</h4>
                     <p>{projectData.shortDescription}</p>
                 </div>
 
                 <div className="col-md-12 my-5">
-                    <h3>full description</h3>
-                    <p>{projectData.description}</p>
-                </div>
-
-                <div className="col-md-12 my-5">
-                    <h3>full description</h3>
+                    <h4>full description</h4>
                     <p>{projectData.description}</p>
                 </div>
             </div>

@@ -3,8 +3,6 @@ import Button from "../../common/inputs/Button";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {GetHTTPRequestOptions, PostHttpRequestOptions} from "../../functions/HttpRequestOptions";
-import {useLocation} from "react-router-dom";
-import ModalWithInput from "../../common/modals/ModalWithInput";
 
 export default function UserProject({projectData, setDeleteWindowOpen}) {
     const [isOwner, setOwner] = useState(false);
@@ -21,12 +19,13 @@ export default function UserProject({projectData, setDeleteWindowOpen}) {
     return (
         <>
             <ProjectData projectData={projectData}/>
-            <a href={"/files/" + projectData.fileName} download>
-                <button>Download</button>
-            </a>
+
             {isOwner && projectData.revoked !== 'y' ?
                 <div className="container">
                         <div className="btn-group" role="group" aria-label="Basic example">
+                            <a href={"/files/" + projectData.fileName} download>
+                                <Button text="Скачать прикрепленные файлы"></Button>
+                            </a>
                             <Button text="delete" onClickFunction={setDeleteWindowOpen}></Button>
                         </div>
                 </div>

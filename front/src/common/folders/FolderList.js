@@ -11,13 +11,13 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
 
     const defaultFolders = [{
         id: -1,
-        name: "active",
+        name: "Активные проекты",
         selected: true,
         deletable: false,
     },
     {
         id: -2,
-        name: "revoked",
+        name: "Отозванные проекты",
         selected: false,
         deletable: false
     }]
@@ -66,7 +66,7 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
             if (ignoreSystemFolders) folderHtmlObjects = folderHtmlObjects.filter((item)=> item.props.id >= 0);
 
             return (
-                <><div className="btn-group">
+                <>
                     <button type="button" className="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
                         {activeFolderObject.name}
@@ -74,7 +74,6 @@ export default function FolderList({activeFolder, setActiveFolder, ignoreSystem:
                     <ul className="dropdown-menu">
                         {folderHtmlObjects}
                     </ul>
-                </div>
                 </>)
         }
 

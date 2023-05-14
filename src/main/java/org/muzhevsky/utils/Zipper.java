@@ -18,14 +18,13 @@ public class Zipper {
     private final Random random = new Random();
 
     @SneakyThrows
-    public String zip(List<String> fileNames){
-        var seconds = Long.toString(Instant.now().getEpochSecond() + random.nextLong());
-        var fullName = seconds + ".zip";
+    public String zip(int projectId, List<String> fileNames){
+        var localPath = projectId + "\\" + projectId + ".zip";
 
-        FileOutputStream fos = new FileOutputStream(path + fullName);
+        FileOutputStream fos = new FileOutputStream(this.path + localPath);
         ZipOutputStream zipOut = new ZipOutputStream(fos);
         for (var name : fileNames){
-            File fileToZip = new File(path+name);
+            File fileToZip = new File(this.path +name);
             FileInputStream fis = new FileInputStream(fileToZip);
             ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
             zipOut.putNextEntry(zipEntry);
@@ -40,6 +39,6 @@ public class Zipper {
         zipOut.close();
         fos.close();
 
-        return fullName;
+        return projectId + ".zip";
     }
 }

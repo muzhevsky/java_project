@@ -29,7 +29,7 @@ export default function UserProjectsSection() {
     }
 
     function readFileInputs(project, resolve){
-        if (project.image.name === undefined){
+        if (project.image === undefined || project.image.name === undefined){
             project.image = {
                 name: "default.png",
                 content: [-1]
@@ -38,14 +38,13 @@ export default function UserProjectsSection() {
             return;
         }
 
-        let split = project.image.name.split('.');
-        let format = split[split.length - 1];
+        let name = project.image.name;
 
         return new Promise(()=>{
         const reader = new FileReader();
         reader.onload = (event)=>{
             project.image = {
-                format: format,
+                name: name,
                 content: Array.from(new Uint8Array(event.target.result))
             }
             readFiles(project, resolve);
@@ -66,13 +65,12 @@ export default function UserProjectsSection() {
                 return;
             }
 
-            let split = project.files[index].name.split('.');
-            let format = split[split.length - 1];
+            let name = project.files[index].name;
 
             const reader = new FileReader();
             reader.onload = (event) => {
                 output[index] = {
-                    format: format,
+                    name: name,
                     content: Array.from(new Uint8Array(event.target.result))
                 }
                 readFile(index+1, output);
@@ -109,24 +107,25 @@ export default function UserProjectsSection() {
     }
 
     function render(){
-        return (        <>
+        return (
+            <>
             {role==="user" ? <>
                 <FolderList forceUpdate={forceUpdate} activeFolder={activeFolder} setActiveFolder={setActiveFolder}
                             setNewFolderWindowActive={setNewFolderWindowActive} ignoreSystem={false}/>
-                <Button text="create folder" onClickFunction={() =>{setNewFolderWindowActive(true)}}>
+                <Button text="Создать папку" onClickFunction={() =>{setNewFolderWindowActive(true)}}>
                     create folder
                 </Button>
-                <Button text="create project" onClickFunction={() =>{setNewProjectWindowActive(true)}}>
+                <Button text="Создать проект" onClickFunction={() =>{setNewProjectWindowActive(true)}}>
                     create project
                 </Button>
-                <ProjectList selectedFolder={activeFolder} update={forceUpdate}/>
+                <ProjectList selectedFolder={activeFolder}/>
             </> : ""}
-            {newFolderWindowActive ? <ModalWithInput text="folder name" inputClassName="folder-name-input"
+            {newFolderWindowActive ? <ModalWithInput name="Создание папки" inputName="Название папки" inputClassName="folder-name-input"
                                                      onAcceptButtonClick={(name) => {createNewFolder(name); setNewFolderWindowActive(false);}}
                                                      onRefuseButtonClick={() => {setNewFolderWindowActive(false)}}/> : ""}
-            {newProjectWindowActive ? <CreateProjectModalWindow onAcceptButtonClick={(project) => createNewProject(project)}
+            {newProjectWindowActive ? <CreateProjectModalWindow name="Создание проекта" onAcceptButtonClick={(project) => createNewProject(project)}
                                                                 onRefuseButtonClick={()=> setNewProjectWindowActive(false)}/> : ""}
-        </>);
+            </>);
     }
 
     return render();

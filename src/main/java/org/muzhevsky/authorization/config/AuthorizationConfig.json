@@ -1,5 +1,5 @@
 {
   "key":"SLIVTUn74vS47tvy3t834vSetusygt33vnvs2309239x4u23hjkskjdf",
-  "accessTokenLifetime":30,
+  "accessTokenLifetime":3600,
   "refreshTokenLifetime":2592000
 }

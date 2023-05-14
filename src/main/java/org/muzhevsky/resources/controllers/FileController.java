@@ -1,6 +1,6 @@
 package org.muzhevsky.resources.controllers;
 
-import org.muzhevsky.resources.repos.CommonFileRepository;
+import org.muzhevsky.resources.repos.ProjectFilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FileController{
     @Autowired
-    @Qualifier("commonFileRepository")
-    CommonFileRepository commonFileRepository;
-    @GetMapping("files/{filename}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String filename){
+    @Qualifier("projectFilesRepository")
+    ProjectFilesRepository projectFilesRepository;
+    @GetMapping("files/{projectId}")
+    public ResponseEntity<byte[]> getFile(@PathVariable int projectId){
         try{
-            var file = commonFileRepository.getFileByName(filename);
+            var file = projectFilesRepository.getFileById(projectId);
             return new ResponseEntity<>(file.getContent(), HttpStatus.OK);
         }
         catch (Exception ex){

@@ -10,17 +10,19 @@ export default function Header(){
     const [role, setRole] = useState(-1);
 
     useEffect(()=>{
-        //getRoleFromToken(setRole);
+        authorize(setRole);
     }, []);
 
 
     function render(){
         if (role === -1) return "";
+        let inner;
         switch (role){
-            case "user": return <UserHeader/>
-            case "company": return <CompanyHeader/>
-            case "default": return <GuestHeader/>
+            case "user": inner = <UserHeader/>
+            case "company": inner = <CompanyHeader/>
+            case "default": inner = <GuestHeader/>
         }
+        return (<div className="header">{inner}</div>)
     }
 
     return (
