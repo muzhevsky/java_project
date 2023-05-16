@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
@@ -28,13 +29,14 @@ public class ProjectModel {
     private String fileName;
 
 
-    public void init(ProjectForm form, int accountId){
+    public void init(ProjectForm form, int accountId, String imageFileName){
         this.name = form.getName();
         this.accountId = accountId;
         this.description = form.getDescription();
         this.shortDescription = form.getShortDescription();
         this.revoked = "n";
         this.folderId = form.getFolderId();
+        this.imageFileName = imageFileName;
     }
 
 }

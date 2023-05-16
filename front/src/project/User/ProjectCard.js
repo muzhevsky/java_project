@@ -1,5 +1,5 @@
 
-export default function ProjectCard({id, name, description, date, imageurl, creationDate, onClickFunction}){
+export default function ProjectCard({id, name, description, imageurl, creationDate, onClickFunction}){
     return (
         <div className="card mb-3" style={{width: "100%"}} onClick={()=>{onClickFunction(id)}}>
             <div className="row g-0">

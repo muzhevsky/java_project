@@ -1,3 +1,6 @@
+body{
+    background-color: #F1F6F9;
+}
 
 p{
     margin: 0px;
@@ -31,17 +34,19 @@ ul{
 .header{
     width: 100%;
     height: 40px;
-    background-color: lightgreen;
+    background-color: #9448BC;
     margin: 0px;
     display: flex;
     align-content: flex-start;
     align-items: center;
     padding: 20px;
+    color: white;
 }
 
 .header a{
     text-decoration: none;
-
+    font-size: 20px;
+    color: white;
 }
 
 .delete-folder{
@@ -56,7 +61,8 @@ ul{
 }
 
 .project-card-image{
-    width:100%;
+    min-width: 300px;
+    width: 300px;
     height: 100%;
 }
 .project-card-image-container{
@@ -73,5 +79,33 @@ ul{
 }
 
 .card {
+    min-width: 900px;
     margin: 10px 0;
+    background-color: #F7F1F8;
+}
+
+.btn-primary{
+    background-color: #9448BC;
+    border: none;
+}
+
+.btn-primary:hover{
+    background-color: #3A015C;
+}
+
+.profile-button-container{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.profile-button-container:hover{
+    cursor: pointer;
+}
+
+.avatar-image{
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin-right: 10px;
 }

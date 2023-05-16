@@ -118,7 +118,7 @@ export default function UserProjectsSection() {
                 <Button text="Создать проект" onClickFunction={() =>{setNewProjectWindowActive(true)}}>
                     create project
                 </Button>
-                <ProjectList selectedFolder={activeFolder}/>
+                <ProjectList selectedFolder={activeFolder} forceUpdate={forceUpdate}/>
             </> : ""}
             {newFolderWindowActive ? <ModalWithInput name="Создание папки" inputName="Название папки" inputClassName="folder-name-input"
                                                      onAcceptButtonClick={(name) => {createNewFolder(name); setNewFolderWindowActive(false);}}

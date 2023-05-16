@@ -5,16 +5,18 @@ import ProjectCard from "./ProjectCard";
 import {Navigate, redirect} from "react-router-dom";
 import {authorize} from "../../functions/RefreshFunction";
 
-export default function ProjectList({selectedFolder, update}){
+export default function ProjectList({selectedFolder, forceUpdate}){
 
     const [projects, setProjects] = useState([]);
     const [openProjectId, setOpenProjectId] = useState(-1);
-    const [thisSelectedFolder, setSelectedFolder] = useState(selectedFolder);
     const [role, setRole] = useState(-1);
 
     useEffect(()=>{
         fetchProjects();
     },[selectedFolder])
+    useEffect(()=>{
+        fetchProjects();
+    },[forceUpdate])
 
     const fetchProjects = () => {
         authorize(setRole, ()=>{

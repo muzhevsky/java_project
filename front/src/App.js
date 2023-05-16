@@ -1,5 +1,5 @@
 import './App.css';
-import Header from "./common/Header";
+import Header from "./common/headers/Header";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import SignUp from "./authentication/SignUp";
 import SignIn from "./authentication/SignIn";

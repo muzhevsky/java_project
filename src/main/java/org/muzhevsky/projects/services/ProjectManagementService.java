@@ -55,7 +55,7 @@ public class ProjectManagementService {
             var imageFileName = imageRepository.save(image);
             var projectModel = new ProjectModel();
 
-            projectModel.init(form, userId);
+            projectModel.init(form, userId, imageFileName);
 
             var entity = projectRepository.save(projectModel);
             System.out.println(entity.getId());
