@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class='card mb-3' style='width: 100%' th:fragment="projectCard (id, title, address, date, imageRef)">
+        <div class='row g-0' th:onclick="'window.location = projectPage + \'/\' + '+${id}">
+            <div class='project-card-picture-container col-md-4'>
+                <img th:src="${'/images/'+imageRef}" class='project-card-picture img-fluid rounded-start' alt=\"картинка\">
+            </div>
+            <div class='card-body col-md-8'>
+                <h5 class='project-card-name card-title' th:text="${title}"></h5>
+                <p class='project-card-address card-text' th:text="${address}"></p>
+                <p class='project-date card-text' th:text="${date}"></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Проект</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+    <script src="/js/paths.js"></script>
+</head>
+<body>
+<div id="header" th:insert="header.html ::header(${roles.size() > 0})"></div>
+
+<div id="project-container" class="container">
+    <div class='row'>
+        <div class='col-3'>
+            <img class='project-data-picture' th:src="${'/images/'+project.imageFileName}">
+        </div>
+        <div class='col-9'>
+            <div class='row'>
+                <div class='col-9'>
+                    <h4 th:text="${project.name}"></h4>
+                    <h4 th:text="'Адрес: '+${project.address}"></h4>
+                    <h4 th:text="'Дата публикации: '+${#dates.format(project.creationDate.toInstant, 'dd-MM-yyyy')}"></h4>
+                    <h4 th:text="'Краткое описание: '+${project.shortDescription}"></h4>
+                </div>
+                <div class='col-3' >
+                    <h4 th:if="${project.status.equals('on verification')}">Проверяется модерацией</h4>
+                    <h4 th:if="${project.status.equals('declined by moderation')}">Отклонено модерацией</h4>
+                    <h4 th:if="${project.status.equals('active')}">Активен</h4>
+                    <h4 th:if="${project.status.equals('canceled')}">Отменен</h4>
+                    <h4 th:if="${project.status.equals('successful')}">Завершен</h4>
+                    <div th:if="${roles.contains('user') && isOwner}">
+                        <form method="post"
+                              th:if="${project.status.equals('active') || project.status.equals('on verification')}"
+                              th:action="'/project/'+${project.id}+'/cancel'">
+                            <button type='submit' class='btn btn-primary'>
+                                Отменить проект
+                            </button>
+                        </form>
+                        <form th:if="${project.status.equals('active')}" method="get"
+                              th:action="${project.id}+'/companies'">
+                            <button type='submit' class='btn btn-primary'>
+                                Компании
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-12'>
+            <h4>Полное описание:</h4>
+            <h4 th:text="${project.description}"></h4>
+        </div>
+    </div>
+    <div class='row' th:if="${roles.contains('company') && !isImplementor}">
+        <div class='col-12'>
+            <form method="post" th:action="${'/acceptproject/'+project.id}">
+                <button type='submit' class='btn btn-primary'>
+                    Добавить себе
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class='row' th:if="${roles.contains('company') && isImplementor}">
+        <div class='col-12'>
+            <h4 th:text="'Телефон заказчика: '+${ownerData.getAttributes().get('phoneNumber').get(0)}"></h4>
+            <h4 th:text="'Email заказчика: '+${ownerData.getEmail()}"></h4>
+            <form method="get" th:action="${'/project/'+project.id+'/estimates/'+visiterId}">
+                <button type='submit' class='btn btn-primary'>
+                    К сметам
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class='row' th:if="${roles.contains('admin')}">
+        <form method="post" th:action="${'/project/'+project.id+'/confirm'}">
+            <button type='submit' class='btn btn-primary'>
+                Подтвердить валидность
+            </button>
+        </form>
+        <form method="post" th:action="${'/project/'+project.id+'/decline'}">
+            <button type='submit' class='btn btn-primary'>
+                Отклонить проект
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

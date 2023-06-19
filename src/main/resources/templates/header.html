@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="header" th:fragment="header (authorized)">
+    <div class="container">
+        <div class='row'>
+            <div class='col-md-10 header-part'>
+                <div class='header-item' onclick='if (window.location !== allProjectsPage) window.location=allProjectsPage'>Все проекты</div>
+                <div class='header-item' th:if="${authorized}" onclick='if (window.location !== myProjectsPage) window.location=myProjectsPage'>Мои проекты</div>
+            </div>
+            <div class='col-md-2 header-part'>
+                <div class='header-item' th:if="${authorized}" onclick='window.location=logout; localStorage.clear();' style="margin: 0; text-align: right">Выйти</div>
+                <div class='header-item' th:if="${!authorized}" onclick='window.location=signInPage' style="margin: 0; text-align: right">Войти</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

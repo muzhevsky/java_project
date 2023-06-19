@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="/js/paths.js"></script>
+    <script src="/js/validations.js"></script>
+    <script src="/js/auth/signin.js"></script>
+</head>
+<body>
+<div class="container col-10">
+    <h2>Вход</h2>
+    <div class="col-12">
+        <label for="login-input" class="form-label">Логин или email</label>
+        <input type="text" id="login-input" class="form-control" onchange="username=value">
+
+        <label for="password-input" class="form-label">Пароль</label>
+        <input type="password" id="password-input" class="form-control" onchange="password=value">
+
+        <br>
+        <button type="button" class="btn btn-primary" onclick="SignIn()">Войти</button>
+
+        <br>
+        <button type="button" class="btn btn-primary" onclick="window.location=userSignupPage">Регистрация</button>
+    </div>
+</div>
+</body>
+</html>
